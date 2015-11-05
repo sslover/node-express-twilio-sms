@@ -116,6 +116,10 @@ You don't need to double add and double commit though. So the following will wor
 	git push origin master
 	git push heroku master
 
+### Setting up Twilio/SMS ###
+
+[See this guide to setting up Twilio/SMS](https://github.com/sslover/designing-for-data-personalization/blob/master/week10/Twilio-SMS-setup.md)	
+
 ### This App's Framework and NodeJS
 
 This app uses the following libraries and concepts:
