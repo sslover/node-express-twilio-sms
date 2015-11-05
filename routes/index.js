@@ -30,14 +30,19 @@ router.get('/', function(req, res) {
 // This gets called every time an incoming message is received
 router.post('/twilio-callback', function(req,res){
 
+  // there's lots contained in the body
   console.log(req.body);
-  // the message is contained in req.body.Body
+
+  // the actual message is contained in req.body.Body
   var incomingMsg = req.body.Body;
   console.log(incomingMsg);
 
+  var incomingNum = req.body.From;
+  
   // now, let's save it to our Database
   var msgToSave = {
-    status: incomingMsg
+    status: incomingMsg,
+    from: incomingNum
   }
 
   var status = new Status(msgToSave)
