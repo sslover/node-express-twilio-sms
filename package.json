@@ -1,5 +1,5 @@
 {
-  "name": "node-express-api-boilerplate",
+  "name": "node-express-twilio-sms",
   "version": "0.0.1",
   "private": true,
   "scripts": {
