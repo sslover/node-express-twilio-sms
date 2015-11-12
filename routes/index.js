@@ -92,7 +92,7 @@ router.get('/api/get',function(req,res){
 
 router.get('/api/get/latest',function(req,res){
 
-  Status.find(function(err,data){
+  Status.find().sort('-dateAdded').exec(function(err,data){
     if(err){
       var error = {
         status: "ERROR",
