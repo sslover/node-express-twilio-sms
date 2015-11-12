@@ -22,7 +22,8 @@ router.get('/', function(req, res) {
   var jsonData = {
   	'name': 'node-express-twilio-sms',
   	'api-status':'OK',
-    'instructions': "Text your status to (646)-846-8769"
+    'instructions': "Text your meal to (646)-846-8769",
+    'format': 'type,rating,place,location'
   }
 
   // respond with json data
@@ -72,6 +73,7 @@ router.post('/twilio-callback', function(req,res){
 
 })
 
+// a different twilio callback, this one for our meals
 router.post('/twilio-callback2', function(req,res){
 
   // there's lots contained in the body
@@ -138,14 +140,14 @@ router.post('/twilio-callback2', function(req,res){
       meal.save(function(err,data){
         if(err){
           // respond to user
-          twilioResp.sms('Oops! We couldn\'t save status --> ' + incomingMsg);
+          twilioResp.sms('Oops! We couldn\'t save meal --> ' + incomingMsg);
           // respond to twilio
           res.set('Content-Type', 'text/xml');
           res.send(twilioResp.toString());      
         }
         else {
           // respond to user
-          twilioResp.sms('Successfully saved status! --> ' + incomingMsg);
+          twilioResp.sms('Successfully saved meal! --> ' + incomingMsg);
           // respond to twilio
           res.set('Content-Type', 'text/xml');
           res.send(twilioResp.toString());    
