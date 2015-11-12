@@ -5,6 +5,9 @@ var mongoose = require('mongoose');
 //Twilio
 var twilio = require('twilio');
 
+// Geocoder
+var geocoder = require('geocoder');
+
 // our db model1
 var Status = require("../models/status.js");
 
@@ -203,7 +206,7 @@ router.get('/api/get/latest',function(req,res){
 })
 
 
-router.get('/api/get/meal',function(req,res){
+router.get('/api/get/meals',function(req,res){
 
   Meal.find(function(err,data){
     if(err){
