@@ -5,8 +5,11 @@ var mongoose = require('mongoose');
 //Twilio
 var twilio = require('twilio');
 
-// our db model
-var Status = require("../models/model.js");
+// our db model1
+var Status = require("../models/status.js");
+
+// our db model2
+var Meal = require("../models/meal.js");
 
 /**
  * GET '/'
@@ -69,6 +72,92 @@ router.post('/twilio-callback', function(req,res){
 
 })
 
+router.post('/twilio-callback2', function(req,res){
+
+  // there's lots contained in the body
+  console.log(req.body);
+
+  // the actual message is contained in req.body.Body
+  var incomingMsg = req.body.Body;
+  console.log(incomingMsg);
+
+
+  // we don't want to save the entire body as one thing
+  // we want to break it up into fields based on a structure of:
+  // breakfast,3,My House,Brooklyn
+  // which maps to:
+  // type: bre
+
+  // the first thing we need to do is separate the big string into individual parts
+  // we can do that by splitting at the commas
+  var msgArray =  incomingMsg.split(',');
+
+  // now it would look like [breakfast,3,My House,Brooklyn]
+  console.log(msgArray);
+
+  // now we can get the value
+  var type = msgArray[0];
+  var rating = msgArray[1];
+  var place = msgArray[2];
+  var location = msgArray[3];
+
+  // set up our data
+  var mealToSave = {
+    type: type,
+    rating: rating,
+    place: place
+  }
+
+  // now, let's geocode the location
+  geocoder.geocode(location, function (err,data) {
+
+    // set up the twilio response
+    var twilioResp = new twilio.TwimlResponse();
+
+    // if we get an error, or don't have any results, respond back with error
+    if (!data || data==null || err || data.status == 'ZERO_RESULTS'){
+      // respond to user
+      twilioResp.sms('Oops! We couldn\'t save meal.. couldn\'t find location -->'  + location);
+      // respond to twilio
+      res.set('Content-Type', 'text/xml');
+      res.send(twilioResp.toString());      
+    }
+
+    // else, let's pull put the lat lon from the results
+    var lon = data.results[0].geometry.location.lng;
+    var lat = data.results[0].geometry.location.lat;
+
+    // now, let's add this to our animal object from above
+    mealToSave.location = {
+      geo: [lon,lat], // need to put the geo co-ordinates in a lng-lat array for saving
+      name: data.results[0].formatted_address // the location name
+    }
+
+      var meal = new Meal(mealToSave)
+
+      meal.save(function(err,data){
+        if(err){
+          // respond to user
+          twilioResp.sms('Oops! We couldn\'t save status --> ' + incomingMsg);
+          // respond to twilio
+          res.set('Content-Type', 'text/xml');
+          res.send(twilioResp.toString());      
+        }
+        else {
+          // respond to user
+          twilioResp.sms('Successfully saved status! --> ' + incomingMsg);
+          // respond to twilio
+          res.set('Content-Type', 'text/xml');
+          res.send(twilioResp.toString());    
+        }
+      })
+
+
+  });
+
+
+})
+
 router.get('/api/get',function(req,res){
 
   Status.find(function(err,data){
@@ -111,6 +200,27 @@ router.get('/api/get/latest',function(req,res){
 
 })
 
+
+router.get('/api/get/meal',function(req,res){
+
+  Meal.find(function(err,data){
+    if(err){
+      var error = {
+        status: "ERROR",
+        message: err
+      }
+      res.json(error);      
+    }
+    else {
+      var jsonData = {
+        status: "OK",
+        meals: data
+      }
+      res.json(jsonData);   
+    }    
+  })
+
+})
 
 
 
