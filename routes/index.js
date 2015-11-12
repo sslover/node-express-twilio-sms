@@ -90,6 +90,28 @@ router.get('/api/get',function(req,res){
 
 })
 
+router.get('/api/get/latest',function(req,res){
+
+  Status.find(function(err,data){
+    if(err){
+      var error = {
+        status: "ERROR",
+        message: err
+      }
+      res.json(error);      
+    }
+    else {
+      var jsonData = {
+        status: "OK",
+        status: data[0]
+      }
+      res.json(jsonData);   
+    }    
+  })
+
+})
+
+
 
 
 module.exports = router;
