@@ -105,7 +105,7 @@ router.get('/api/get/latest',function(req,res){
         status: "OK",
         status: data[0]
       }
-      res.json(jsonData);   
+      res.send(data[0].status);   
     }    
   })
 
