@@ -16,6 +16,6 @@
     "morgan": "~1.6.1",
     "node-env-file": "^0.1.7",
     "serve-favicon": "~2.3.0",
-    "twilio": "^2.5.2"
+    "twilio": "^2.11.0"
   }
 }

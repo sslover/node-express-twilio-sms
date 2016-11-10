@@ -25,7 +25,7 @@ router.get('/', function(req, res) {
   var jsonData = {
   	'name': 'node-express-twilio-sms',
   	'api-status':'OK',
-    'instructions': "Text your meal to (646)-846-8769",
+    'instructions': "Text your meal to (678)-264-6646",
     'format': 'type,rating,place,location'
   }
 
@@ -91,7 +91,10 @@ router.post('/twilio-callback2', function(req,res){
   // we want to break it up into fields based on a structure of:
   // breakfast,3,My House,Brooklyn
   // which maps to:
-  // type: bre
+  // type: breakfast
+  // rating: 3,
+  // place: My House
+  // location: Brooklyn
 
   // the first thing we need to do is separate the big string into individual parts
   // we can do that by splitting at the commas
